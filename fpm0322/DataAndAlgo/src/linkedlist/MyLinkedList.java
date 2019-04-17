@@ -1,5 +1,7 @@
 package linkedlist;
 
+import java.math.BigDecimal;
+
 /**
  * 单链表
  * @author FPM0322
@@ -197,6 +199,124 @@ public class MyLinkedList<T> {
 			currentNode = nextNode;
 		}
 		return reverseNode;
+	}
+	
+	/**
+	 * 两个有序链表合并
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public Node<Number> mergeSorted(Node<Number> a,Node<Number> b){
+		Node<Number> head = null;
+		if(a == null) return b;
+		if(b == null) return a;
+		Node<Number> p = a;
+		Node<Number> q = b;
+		if(p.data.doubleValue()<q.data.doubleValue()){
+			head = p;
+			p = p.next;
+		}else{
+			head = q;
+			q = q.next;
+		}
+		Node<Number> r = head;
+		while(p != null && q != null){
+			if(p.data.doubleValue()<q.data.doubleValue()){
+				r.next = p;
+				p = p.next;
+			}else{
+				r.next = q;
+				q = q.next;
+			}
+		}
+		if(p != null){
+			r.next = p;
+		}else{
+			r.next = q;
+		}
+		return head;
+	}
+	
+	/**
+	 * 检测链表中是否有环
+	 * 思路：
+	 *  1、定义一个快速节点，每次走两步
+	 * 	2、定义一个正常节点，每次走一步
+	 * 	3、如果最终两个节点能够相遇，那么说明存在环
+	 * @param head
+	 * @return
+	 */
+	public boolean checkCircle(Node<T> head){
+		if (head == null) return false;
+		Node<T> fast = head.next;
+		Node<T> slow = head;
+		while(fast != null && fast.next != null){
+			fast = fast.next.next;
+			slow = slow.next;
+			if(slow == fast) return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 求链表的中间节点  
+	 * 思路：
+	 * 	1、定义一个快速节点，每次走两步
+	 * 	2、定义一个正常节点，每次走一步
+	 *  3、当快速节点走完的时候，正常节点刚好处于中间位置
+	 * @param head
+	 * @return
+	 */
+	public Node<T> getMidNode(Node head){
+		if(head == null){
+			return null;
+		}
+		Node<T> fast = head;
+		Node<T> slow = head;
+		while(fast.next != null && fast.next.next != null){
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		return slow;
+	}
+	
+	 /**
+	  * 删除倒数第K个节点
+	  * 思路：
+	  *   1、定义两个节点，front、back、pre
+	  *   2、front先走K个节点
+	  *   3、剩余n-k-1个节点，接下来front与back同步往后走,pre则指向back节点
+	  *   4、假定链表长度为n，当front走到最后，back则走了n-k-1步，此时back位于倒数第k个节点,pre位于back的前一个节点
+	  * @param head
+	  * @param k
+	  * @return
+	  */
+	public Node<T> deleteLastKth(Node<T> head,int k){
+		Node<T> front = head;
+		Node<T> back = head;
+		if(head == null) return null;
+		int i = 1;
+		while(front != null && i<k){
+			front = front.next;
+			i++;
+		}
+		if(front == null){
+			return head;
+		}
+		Node<T> pre = null;//back的前一个节点
+		while(front.next != null){
+			front = front.next;
+			pre = back;
+			back = back.next;
+		}
+		if(pre == null){
+			//当删除首节点时走此处，倒数第n个即首节点
+			head = head.next; 
+		}else{
+			pre.next = pre.next.next;
+		}
+		return head;
 	}
 	
 	/**
